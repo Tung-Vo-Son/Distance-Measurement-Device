@@ -72,6 +72,7 @@ void TW10S_init()
 	HAL_Delay(300);
 	setBaudrate(38400);
 	HAL_Delay(300);
+  HAL_Delay(300);
 }
 
 /* USER CODE END 0 */
