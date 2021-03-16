@@ -72,9 +72,33 @@ void TW10S_init()
 	HAL_Delay(300);
 	setBaudrate(38400);
 	HAL_Delay(300);
-  HAL_Delay(300);
+	setMode(SINGLE_MODE);
+	HAL_Delay(200);
 }
 
+float distance;
+uint8_t measure_mode;
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	switch(GPIO_Pin)
+	{
+	case ON_OFF_Pin:
+		if(tw10s.laser == 1) laserOff();
+		else laserOn();
+		break;
+	case START_Pin:
+		if(tw10s.mode == SINGLE_MODE)				measure_mode = 1;
+		else if(tw10s.mode == CONTINOUS_MODE) 		measure_mode = 2;
+		else if(tw10s.mode == FAST_MODE) 			measure_mode = 3;
+		break;
+	case MODE_Pin:
+		if(tw10s.mode == SINGLE_MODE) 				tw10s.mode = CONTINOUS_MODE;
+		else if(tw10s.mode == CONTINOUS_MODE) 		tw10s.mode = FAST_MODE;
+		else if(tw10s.mode == FAST_MODE) 			tw10s.mode = SINGLE_MODE;
+		break;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -124,8 +148,19 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  TW10S_sendCommand("iSM", "", 1000);
-
+	  switch(measure_mode)
+	  {
+	  case 1:
+		  distance = getDistance();
+		  measure_mode = 0;
+		  break;
+	  case 2:
+		  distance = getDistance();
+		  break;
+	  case 3:
+		  distance = getDistance();
+		  break;
+	  }
   }
   /* USER CODE END 3 */
 }
@@ -241,10 +276,21 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pins : ON_OFF_Pin START_Pin MODE_Pin */
+  GPIO_InitStruct.Pin = ON_OFF_Pin|START_Pin|MODE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 

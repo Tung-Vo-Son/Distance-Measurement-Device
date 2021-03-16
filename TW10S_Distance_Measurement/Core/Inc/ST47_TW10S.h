@@ -16,12 +16,20 @@
 typedef struct
 {
 	uint8_t status;
+	uint8_t laser;
 	uint8_t mode;
 	uint8_t flags;
 	uint8_t rx_data[1];
 	uint8_t buffer[20];
 	uint8_t count;
 }TW10S_Struct;
+
+typedef enum
+{
+	SINGLE_MODE,
+	CONTINOUS_MODE,
+	FAST_MODE
+}TW10S_Mode;
 
 void TW10S_deleteBuffer(char* buffer);
 uint8_t TW10S_sendCommand(char* command, char* response, uint32_t timeout);
@@ -36,8 +44,8 @@ void setFormat(uint8_t format);
 void setSlaveAddress(uint8_t address);
 void setFrequency(uint8_t frequency);
 void setPower(uint8_t power);
-void setMeasure(uint8_t mode);
-float getDistance(uint8_t mode);
+void setMode(uint8_t mode);
+float getDistance();
 
 
 #endif /* INC_ST47_TW10S_H_ */

@@ -54,8 +54,8 @@ all: main-build
 main-build: TW10S_Distance_Measurement.elf secondary-outputs
 
 # Tool invocations
-TW10S_Distance_Measurement.elf: $(OBJS) $(USER_OBJS) D:\Engineering\Lap_trinh\CubeIDE\TW10S_Distance_Measurement\STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "TW10S_Distance_Measurement.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\Engineering\Lap_trinh\CubeIDE\TW10S_Distance_Measurement\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TW10S_Distance_Measurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+TW10S_Distance_Measurement.elf: $(OBJS) $(USER_OBJS) C:\GHTK\IoT\STM32\Distance-Measurement-Device\TW10S_Distance_Measurement\STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "TW10S_Distance_Measurement.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\GHTK\IoT\STM32\Distance-Measurement-Device\TW10S_Distance_Measurement\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TW10S_Distance_Measurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
