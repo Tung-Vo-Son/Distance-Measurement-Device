@@ -1,0 +1,6 @@
+ST47_LCD_I2C.c:10:6:LCD_sendCommand	32	static
+ST47_LCD_I2C.c:23:6:LCD_sendData	32	static
+ST47_LCD_I2C.c:36:6:LCD_init	8	static
+ST47_LCD_I2C.c:54:6:LCD_print	16	static
+ST47_LCD_I2C.c:59:6:LCD_clearDisplay	8	static
+ST47_LCD_I2C.c:64:6:LCD_setCursor	24	static

@@ -1,5 +1,5 @@
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o: \
- ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c \
+Core/Src/ST47_LCD_I2C.o: ../Core/Src/ST47_LCD_I2C.c \
+ ../Core/Inc/ST47_LCD_I2C.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -24,6 +24,8 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+
+../Core/Inc/ST47_LCD_I2C.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 

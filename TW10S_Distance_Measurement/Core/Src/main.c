@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ST47_TW10S.h"
+#include "ST47_LCD_I2C.h"
+//#include "lcd16x2_i2c.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,6 +42,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c2;
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
@@ -52,6 +56,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -73,32 +78,43 @@ void TW10S_init()
 	setBaudrate(38400);
 	HAL_Delay(300);
 	setMode(SINGLE_MODE);
+	LCD_init();
+	HAL_Delay(200);
+	LCD_clearDisplay();
+	HAL_Delay(200);
+	LCD_setCursor(1, 0);
+	HAL_Delay(200);
+	LCD_print("GHTK");
+	HAL_Delay(1000);
+	LCD_setCursor(2, 0);
+	HAL_Delay(1000);
+	LCD_print("Distance Measure");
 	HAL_Delay(200);
 }
 
 float distance;
 uint8_t measure_mode;
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-	switch(GPIO_Pin)
-	{
-	case ON_OFF_Pin:
-		if(tw10s.laser == 1) laserOff();
-		else laserOn();
-		break;
-	case START_Pin:
-		if(tw10s.mode == SINGLE_MODE)				measure_mode = 1;
-		else if(tw10s.mode == CONTINOUS_MODE) 		measure_mode = 2;
-		else if(tw10s.mode == FAST_MODE) 			measure_mode = 3;
-		break;
-	case MODE_Pin:
-		if(tw10s.mode == SINGLE_MODE) 				tw10s.mode = CONTINOUS_MODE;
-		else if(tw10s.mode == CONTINOUS_MODE) 		tw10s.mode = FAST_MODE;
-		else if(tw10s.mode == FAST_MODE) 			tw10s.mode = SINGLE_MODE;
-		break;
-	}
-}
+//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+//{
+//	switch(GPIO_Pin)
+//	{
+//	case ON_OFF_Pin:
+//		if(tw10s.laser == 1) laserOff();
+//		else laserOn();
+//		break;
+//	case START_Pin:
+//		if(tw10s.mode == SINGLE_MODE)				measure_mode = 1;
+//		else if(tw10s.mode == CONTINOUS_MODE) 		measure_mode = 2;
+//		else if(tw10s.mode == FAST_MODE) 			measure_mode = 3;
+//		break;
+//	case MODE_Pin:
+//		if(tw10s.mode == SINGLE_MODE) 				tw10s.mode = CONTINOUS_MODE;
+//		else if(tw10s.mode == CONTINOUS_MODE) 		tw10s.mode = FAST_MODE;
+//		else if(tw10s.mode == FAST_MODE) 			tw10s.mode = SINGLE_MODE;
+//		break;
+//	}
+//}
 /* USER CODE END 0 */
 
 /**
@@ -131,13 +147,11 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_I2C2_Init();
+
   /* USER CODE BEGIN 2 */
 
   	TW10S_init();
-//  TW10S_sendCommand("iHALT","STOP OK",2000);
-//  HAL_Delay(2000);
-//  TW10S_sendCommand("iLD:1", "LASER OPEN", 2000);
-//  HAL_Delay(2000);
 
   /* USER CODE END 2 */
 
@@ -148,19 +162,27 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  switch(measure_mode)
-	  {
-	  case 1:
-		  distance = getDistance();
-		  measure_mode = 0;
-		  break;
-	  case 2:
-		  distance = getDistance();
-		  break;
-	  case 3:
-		  distance = getDistance();
-		  break;
-	  }
+//	  switch(measure_mode)
+//	  {
+//	  case 1:
+//		  distance = getDistance();
+//		  measure_mode = 0;
+//		  break;
+//	  case 2:
+//		  distance = getDistance();
+//		  break;
+//	  case 3:
+//		  distance = getDistance();
+//		  break;
+//	  }
+//	  LCD_clearDisplay();
+//	  HAL_Delay(100);
+	  LCD_setCursor(0, 1);
+	  HAL_Delay(100);
+	  TW10S_sendCommand("iSM", "", 1000);
+	  LCD_print((char*)tw10s.buffer);
+	  HAL_Delay(200);
+
   }
   /* USER CODE END 3 */
 }
@@ -201,6 +223,40 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
+
 }
 
 /**
@@ -281,6 +337,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pins : ON_OFF_Pin START_Pin MODE_Pin */
   GPIO_InitStruct.Pin = ON_OFF_Pin|START_Pin|MODE_Pin;

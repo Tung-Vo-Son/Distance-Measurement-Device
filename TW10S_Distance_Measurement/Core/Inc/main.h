@@ -67,6 +67,10 @@ void Error_Handler(void);
 #define MODE_Pin GPIO_PIN_7
 #define MODE_GPIO_Port GPIOA
 #define MODE_EXTI_IRQn EXTI9_5_IRQn
+#define LCD_SCL_Pin GPIO_PIN_10
+#define LCD_SCL_GPIO_Port GPIOB
+#define LCD_SDA_Pin GPIO_PIN_11
+#define LCD_SDA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
