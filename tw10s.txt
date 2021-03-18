@@ -1,0 +1,13 @@
+iSET:1,-10<CR><LF>			// Offset distance 
+iSET:2,60000<CR><LF>			// Range - tầm xa
+iSET:3,38400<CR><LF>			// Baudrate - set Baudrate
+iSET:4,0<CR><LF>			// Protocol - giao thức giao tiếp
+iSET:5,1<CR><LF>			// Output format (3 chữ số hay 4 chữ số sau dấu phẩy) 
+iSET:6,4<CR><LF>			// Set địa chỉ cho slave
+iSET:7,20<CR><LF>			// Tần só đo
+iSET:8,1<CR><LF>			// Set công suất tự động
+iSM<CR><LF>				// Đo 1 lần
+iACM<CR><LF>				// Đo liên tục
+iFACM<CR><LF>				// Đo nhanh
+iHALT<CR><LF>				// Dừng đo
+iLD<CR><LF>				// On off laser  
